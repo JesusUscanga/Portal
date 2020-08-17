@@ -35,6 +35,7 @@ namespace GoogleARCore.Examples.HelloAR
     /// </summary>
     public class HelloARController : MonoBehaviour
     {
+        public bool portal = false;
         /// <summary>
         /// The first-person camera being used to render the passthrough camera image (i.e. AR background).
         /// </summary>
@@ -104,8 +105,9 @@ namespace GoogleARCore.Examples.HelloAR
             TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
                 TrackableHitFlags.FeaturePointWithSurfaceNormal;
 
-            if (Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit))
-            {
+            //if (Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit))
+            if (Frame.Raycast(touch.position.x, touch.position.y, raycastFilter, out hit) && portal==false)
+                {
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
                 if ((hit.Trackable is DetectedPlane) &&
@@ -118,7 +120,7 @@ namespace GoogleARCore.Examples.HelloAR
                 {
                     // Instantiate Andy model at the hit pose.
                     var andyObject = Instantiate(AndyAndroidPrefab, hit.Pose.position, hit.Pose.rotation);
-
+                    portal = true;
                     // Compensate for the hitPose rotation facing away from the raycast (i.e. camera).
                     andyObject.transform.Rotate(0, k_ModelRotation, 0, Space.Self);
 
